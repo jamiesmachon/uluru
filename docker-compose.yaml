@@ -1,0 +1,142 @@
+version: '3'
+services:
+  # making everything talky talky
+  rabbitmq:
+    image: rabbitmq:3.8-management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    volumes:
+      - /var/lib/rabbitmq
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    env_file:
+      - .env
+
+  # making everything savey savey
+  mysql:
+    image: mariadb:latest
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - '3306:3306'
+    environment:
+      DB_HOST: localhost
+      MARIADB_ROOT_PASSWORD: root
+    volumes:
+      - uluru_data:/var/lib/mysql
+      - ./docker/mariadb/my.cnf.d:/etc/mysql/my.cnf.d
+      - ./docker/mariadb/schemas:/docker-entrypoint-initdb.d
+
+  # make database faster faster
+  redis:
+    image: redis
+    command: /bin/sh -c "redis-server --requirepass $$REDIS_PASS"
+    env_file:
+      - .env
+    ports:
+      - 6379:6379
+    volumes:
+      - ./redis/data:/data
+
+  # request monkey
+  api-gateway:
+    build:
+      context: ./
+      dockerfile: ./apps/api-gateway/Dockerfile
+    ports:
+      - '80:9090'
+    env_file:
+      - .env
+    depends_on:
+      - rabbitmq
+      - auth-microservice
+    volumes:
+      - .:/usr/src/app # any change to base folder should be reflected
+      - /usr/src/app/node_modules
+    command: npm run start:dev api-gateway
+
+  # make everything secure
+  auth-microservice:
+    build:
+      context: ./
+      dockerfile: ./apps/auth-microservice/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app # any change to base folder should be reflected
+      - /usr/src/app/node_modules
+    command: npm run start:dev auth-microservice # overrides CMD from dockerfile
+
+  # Users CRUD Service
+  users-microservice:
+    build:
+      context: ./
+      dockerfile: ./apps/users-microservice/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app # any change to base folder should be reflected
+      - /usr/src/app/node_modules
+    command: npm run start:dev users-microservice # overrides CMD from dockerfile
+
+  # CronJob Service
+  cron-microservice:
+    build:
+      context: ./
+      dockerfile: ./apps/cron-microservice/Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - .:/usr/src/app # any change to base folder should be reflected
+      - /usr/src/app/node_modules
+    command: npm run start:dev cron-microservice # overrides CMD from dockerfile
+
+  # Translations CRUD Service
+  translations-microservice:
+    build:
+      context: ./
+      dockerfile: ./apps/translations-microservice/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app # any change to base folder should be reflected
+      - /usr/src/app/node_modules
+    command: npm run start:dev translations-microservice # overrides CMD from dockerfile
+
+  # Orders CRUD Service
+  orders-microservice:
+    build:
+      context: ./
+      dockerfile: ./apps/orders-microservice/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app # any change to base folder should be reflected
+      - /usr/src/app/node_modules
+    command: npm run start:dev orders-microservice # overrides CMD from dockerfile
+
+  # Assets CRUD Service
+  assets-microservice:
+    build:
+      context: ./
+      dockerfile: ./apps/assets-microservice/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app # any change to base folder should be reflected
+      - /usr/src/app/node_modules
+    command: npm run start:dev assets-microservice # overrides CMD from dockerfile
+volumes:
+  uluru_data:

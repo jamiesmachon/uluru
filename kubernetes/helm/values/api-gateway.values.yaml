@@ -1,0 +1,10 @@
+name: api-gateway
+deployment:
+  image: 'nextpixel/api-gateway'
+  tag: '0.0.1'
+  replicas: 2
+  containerPort: 9090
+service:
+  type: NodePort
+  port: 9090
+  targetPort: 9090

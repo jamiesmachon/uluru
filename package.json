@@ -2,7 +2,7 @@
   "name": "uluru",
   "version": "0.0.1",
   "description": "A Nestjs monorepo for the H&H online infrastructure.",
-  "author": "NextPixel",
+  "author": "Jamie S Machon",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {

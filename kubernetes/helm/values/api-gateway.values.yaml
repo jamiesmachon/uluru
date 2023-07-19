@@ -1,6 +1,6 @@
 name: api-gateway
 deployment:
-  image: 'nextpixel/api-gateway'
+  image: 'jamiesmachon/api-gateway'
   tag: '0.0.1'
   replicas: 2
   containerPort: 9090

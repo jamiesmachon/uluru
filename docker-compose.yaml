@@ -3,7 +3,7 @@ services:
   # making everything talky talky
   rabbitmq:
     image: rabbitmq:3.8-management
-    container_name: rabbitmq
+    container_name: uluru-rabbitmq
     hostname: rabbitmq
     volumes:
       - /var/lib/rabbitmq
@@ -16,6 +16,7 @@ services:
   # making everything savey savey
   mysql:
     image: mariadb:latest
+    container_name: uluru-mariadb
     restart: always
     env_file:
       - .env
@@ -25,13 +26,14 @@ services:
       DB_HOST: localhost
       MARIADB_ROOT_PASSWORD: root
     volumes:
-      - uluru_data:/var/lib/mysql
+      - ./mariadb/data:/var/lib/mysql
       - ./docker/mariadb/my.cnf.d:/etc/mysql/my.cnf.d
       - ./docker/mariadb/schemas:/docker-entrypoint-initdb.d
 
   # make database faster faster
   redis:
     image: redis
+    container_name: uluru-redis
     command: /bin/sh -c "redis-server --requirepass $$REDIS_PASS"
     env_file:
       - .env
@@ -42,6 +44,7 @@ services:
 
   # request monkey
   api-gateway:
+    container_name: uluru-api-gateway
     build:
       context: ./
       dockerfile: ./apps/api-gateway/Dockerfile
@@ -51,7 +54,8 @@ services:
       - .env
     depends_on:
       - rabbitmq
-      - auth-microservice
+      - mysql
+      - redis
     volumes:
       - .:/usr/src/app # any change to base folder should be reflected
       - /usr/src/app/node_modules
@@ -59,6 +63,7 @@ services:
 
   # make everything secure
   auth-microservice:
+    container_name: uluru-auth-microservice
     build:
       context: ./
       dockerfile: ./apps/auth-microservice/Dockerfile
@@ -66,6 +71,7 @@ services:
       - .env
     depends_on:
       - rabbitmq
+      - api-gateway
     volumes:
       - .:/usr/src/app # any change to base folder should be reflected
       - /usr/src/app/node_modules
@@ -73,6 +79,7 @@ services:
 
   # Users CRUD Service
   users-microservice:
+    container_name: uluru-users-microservice
     build:
       context: ./
       dockerfile: ./apps/users-microservice/Dockerfile
@@ -80,6 +87,7 @@ services:
       - .env
     depends_on:
       - rabbitmq
+      - api-gateway
     volumes:
       - .:/usr/src/app # any change to base folder should be reflected
       - /usr/src/app/node_modules
@@ -87,11 +95,15 @@ services:
 
   # CronJob Service
   cron-microservice:
+    container_name: uluru-cron-microservice
     build:
       context: ./
       dockerfile: ./apps/cron-microservice/Dockerfile
     env_file:
       - .env
+    depends_on:
+      - rabbitmq
+      - api-gateway
     volumes:
       - .:/usr/src/app # any change to base folder should be reflected
       - /usr/src/app/node_modules
@@ -99,6 +111,7 @@ services:
 
   # Translations CRUD Service
   translations-microservice:
+    container_name: uluru-translations-microservice
     build:
       context: ./
       dockerfile: ./apps/translations-microservice/Dockerfile
@@ -106,6 +119,7 @@ services:
       - .env
     depends_on:
       - rabbitmq
+      - api-gateway
     volumes:
       - .:/usr/src/app # any change to base folder should be reflected
       - /usr/src/app/node_modules
@@ -113,6 +127,7 @@ services:
 
   # Orders CRUD Service
   orders-microservice:
+    container_name: uluru-orders-microservice
     build:
       context: ./
       dockerfile: ./apps/orders-microservice/Dockerfile
@@ -120,6 +135,7 @@ services:
       - .env
     depends_on:
       - rabbitmq
+      - api-gateway
     volumes:
       - .:/usr/src/app # any change to base folder should be reflected
       - /usr/src/app/node_modules
@@ -127,6 +143,7 @@ services:
 
   # Assets CRUD Service
   assets-microservice:
+    container_name: uluru-assets-microservice
     build:
       context: ./
       dockerfile: ./apps/assets-microservice/Dockerfile
@@ -134,9 +151,8 @@ services:
       - .env
     depends_on:
       - rabbitmq
+      - api-gateway
     volumes:
       - .:/usr/src/app # any change to base folder should be reflected
       - /usr/src/app/node_modules
     command: npm run start:dev assets-microservice # overrides CMD from dockerfile
-volumes:
-  uluru_data:

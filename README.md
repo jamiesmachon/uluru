@@ -50,8 +50,8 @@ $ sudo joe /etc/hosts
 Add the following domains
 
 ```bash
-127.0.0.1   rabbits.historyheraldry.com
-127.0.0.1   api.historyheraldry.com
+127.0.0.1   rabbits.jamiesmachon.com
+127.0.0.1   api.jamiesmachon.com
 ```
 
 Now we have the required local setup we can deploy our nestjs monorepo applications to our Kind Kubernetes cluster
@@ -70,8 +70,8 @@ Now we have the required local setup we can deploy our nestjs monorepo applicati
 
 Now we can access our services on their assigned domains:
 
-https://rabbits.historyheraldry.com/
-https://api.historyheraldry.com/
+https://rabbits.jamiesmachon.com/
+https://api.jamiesmachon.com/
 
 ## Logs
 

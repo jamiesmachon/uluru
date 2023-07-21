@@ -2,8 +2,8 @@
 
 The most common way to route traffic with ingress is by domain:
 
-https://rabbits.historyheraldry.com/ --> Ingress --> k8s service --> http://rabbitmq/
-https://api.historyheraldry.com/ --> Ingress --> k8s service --> http://api-gateway/
+https://rabbits.jamiesmachon.com/ --> Ingress --> k8s service --> http://rabbitmq/
+https://api.jamiesmachon.com/ --> Ingress --> k8s service --> http://api-gateway/
 To showcase this, let's deploy an ingress for our services that routes by domain.
 
 ```bash
@@ -15,7 +15,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: rabbits.historyheraldry.com
+    - host: rabbits.jamiesmachon.com
       http:
         paths:
           - path: /

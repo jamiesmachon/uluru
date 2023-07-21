@@ -14,6 +14,22 @@ export class AssetEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({
+    name: 'filename',
+  })
+  fileName: string;
+
+  @Column()
+  guid: string;
+
+  @Column({
+    name: 'mime_type',
+  })
+  mimeType: string;
+
+  @Column()
+  size: number;
+
   @CreateDateColumn()
   created: string;
 

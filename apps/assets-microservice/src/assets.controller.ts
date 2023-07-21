@@ -17,17 +17,16 @@ export class AssetsController {
     private readonly assetsService: AssetsService,
   ) {}
 
-  @MessagePattern('assets.upload')
-  async handleUploadFile(
-    @Ctx() context: RmqContext,
-    @Payload() fileBuffer: Buffer,
-  ) {
+  @MessagePattern({ cmd: 'assets.upload' })
+  async uploadFile(@Ctx() context: RmqContext, @Payload() file) {
     // this.rmqService.ack(context);
 
     // Process the file buffer here
-    console.log('Received file buffer:', fileBuffer);
-    const newFile = '';
+    console.log('Received file:', file);
+    // upload the file to a storage location
+    //const newFile = '';
 
-    return this.assetsService.create(newFile);
+    // create a record in the database for that new asset
+    // return this.assetsService.create(newFile);
   }
 }

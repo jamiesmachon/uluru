@@ -15,12 +15,8 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ClientProxy } from '@nestjs/microservices';
-import {
-  AuthGuard,
-  CommonControllerInterface,
-  UserInterceptor,
-  UserRequest,
-} from '@app/common';
+import { AuthGuard, UserInterceptor, UserRequest } from '@app/common';
+import { Buffer } from 'buffer';
 
 @Controller('assets')
 export class AssetsController {
@@ -39,15 +35,12 @@ export class AssetsController {
       throw new BadRequestException();
     }
 
-    // Convert the file to a buffer
-    const fileBuffer = Buffer.from(file.buffer);
-
     // Send the file to the microservice using the `client` object
     return this.assetsService.send(
       {
         cmd: 'assets.upload',
       },
-      fileBuffer,
+      file,
     );
   }
 }

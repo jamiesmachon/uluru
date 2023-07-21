@@ -21,8 +21,6 @@ export class AuthGuard implements CanActivate {
 
     return this.authService.send({ cmd: 'auth.verify-jwt' }, { jwt }).pipe(
       tap((res) => {
-        console.log('canActivate pipe tap: ', res);
-
         this.addUser(res, ctx);
       }),
       catchError((err) => {

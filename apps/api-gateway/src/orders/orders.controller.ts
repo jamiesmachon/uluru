@@ -30,24 +30,6 @@ export class OrdersController implements CommonControllerInterface {
 
   @UseGuards(AuthGuard)
   @UseInterceptors(UserInterceptor)
-  @Post()
-  async create(@Req() req: UserRequest, @Body() body: CreateOrderDTO) {
-    if (!req?.user) {
-      throw new BadRequestException();
-    }
-
-    return this.ordersService.send(
-      {
-        cmd: 'orders.create',
-      },
-      {
-        body,
-      },
-    );
-  }
-
-  @UseGuards(AuthGuard)
-  @UseInterceptors(UserInterceptor)
   @Get()
   async getAll(@Req() req: UserRequest) {
     if (!req?.user) {
@@ -76,6 +58,24 @@ export class OrdersController implements CommonControllerInterface {
       },
       {
         id,
+      },
+    );
+  }
+
+  @UseGuards(AuthGuard)
+  @UseInterceptors(UserInterceptor)
+  @Post()
+  async create(@Req() req: UserRequest, @Body() body: CreateOrderDTO) {
+    if (!req?.user) {
+      throw new BadRequestException();
+    }
+
+    return this.ordersService.send(
+      {
+        cmd: 'orders.create',
+      },
+      {
+        body,
       },
     );
   }

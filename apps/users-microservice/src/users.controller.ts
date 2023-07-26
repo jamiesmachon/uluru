@@ -48,7 +48,7 @@ export class UsersController {
   ) {
     this.rmqService.ack(context);
 
-    return this.usersService.update(updateUser.id, updateUser);
+    return this.usersService.update(updateUser.id, updateUser.body);
   }
 
   @MessagePattern({ cmd: 'users.delete' })

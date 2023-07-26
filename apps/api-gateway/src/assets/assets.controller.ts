@@ -1,12 +1,8 @@
+import { Express } from 'express';
 import {
   BadRequestException,
-  Body,
   Controller,
-  Delete,
-  Get,
   Inject,
-  Param,
-  Patch,
   Post,
   Req,
   UseGuards,
@@ -16,7 +12,6 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ClientProxy } from '@nestjs/microservices';
 import { AuthGuard, UserInterceptor, UserRequest } from '@app/common';
-import { Buffer } from 'buffer';
 
 @Controller('assets')
 export class AssetsController {

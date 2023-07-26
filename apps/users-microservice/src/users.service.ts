@@ -1,10 +1,11 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import {
   UserEntity,
   UsersRepositoryInterface,
   CreateUserDTO,
-  UpdateUserDTO,
+  generateUsernameFromEmail,
+  hashPassword,
 } from '@app/common';
 import { UsersServiceInterface } from './interfaces/users.service.interface';
 
@@ -15,8 +16,27 @@ export class UsersService implements UsersServiceInterface {
     private readonly usersRepository: UsersRepositoryInterface,
   ) {}
 
-  async create(data: CreateUserDTO): Promise<UserEntity> {
-    return await this.usersRepository.save(data);
+  async create(newUser: CreateUserDTO): Promise<UserEntity> {
+    console.log('newUser', newUser);
+
+    const { email, password } = newUser;
+
+    const existingUser = await this.getBy({ email: email });
+
+    if (existingUser) {
+      throw new ConflictException('An account with that email already exists');
+    }
+
+    const [salt, hash] = await hashPassword(password);
+
+    const savedUser = await this.usersRepository.save({
+      ...newUser,
+      username: generateUsernameFromEmail(email),
+      salt,
+      password: hash,
+    });
+
+    return savedUser;
   }
 
   async getAll(): Promise<UserEntity[]> {
@@ -32,10 +52,10 @@ export class UsersService implements UsersServiceInterface {
 
   async update(
     id: number,
-    data: UpdateUserDTO,
+    body: Omit<CreateUserDTO, 'id'>,
   ): Promise<UserEntity | UpdateResult> {
     const user = await this.getBy({ id: id }).then((res) => res);
-    if (user) return await this.usersRepository.update(id, data);
+    if (user) return await this.usersRepository.update(id, body);
     return;
   }
 

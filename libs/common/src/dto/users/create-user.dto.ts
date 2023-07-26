@@ -7,7 +7,7 @@ export class CreateUserDTO {
   @IsNotEmpty({ message: 'Password field cannot be empty' })
   password: string;
 
-  username: string;
+  username?: string;
 
-  salt: string;
+  salt?: string;
 }

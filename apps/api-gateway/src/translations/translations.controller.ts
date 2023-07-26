@@ -32,24 +32,6 @@ export class TranslationsController implements CommonControllerInterface {
 
   @UseGuards(AuthGuard)
   @UseInterceptors(UserInterceptor)
-  @Post()
-  async create(@Req() req: UserRequest, @Body() body: CreateTranslationDTO) {
-    if (!req?.user) {
-      throw new BadRequestException();
-    }
-
-    return this.translationsService.send(
-      {
-        cmd: 'translations.create',
-      },
-      {
-        body,
-      },
-    );
-  }
-
-  @UseGuards(AuthGuard)
-  @UseInterceptors(UserInterceptor)
   @Get()
   async getAll(@Req() req: UserRequest, @Body() body: GetTranslationsDTO) {
     if (!req?.user) {
@@ -78,6 +60,24 @@ export class TranslationsController implements CommonControllerInterface {
       },
       {
         id,
+      },
+    );
+  }
+
+  @UseGuards(AuthGuard)
+  @UseInterceptors(UserInterceptor)
+  @Post()
+  async create(@Req() req: UserRequest, @Body() body: CreateTranslationDTO) {
+    if (!req?.user) {
+      throw new BadRequestException();
+    }
+
+    return this.translationsService.send(
+      {
+        cmd: 'translations.create',
+      },
+      {
+        body,
       },
     );
   }

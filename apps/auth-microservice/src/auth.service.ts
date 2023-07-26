@@ -6,7 +6,6 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
 import {
   generateUsernameFromEmail,
   UserEntity,
@@ -16,6 +15,8 @@ import {
   RegisterUserDTO,
   RegisteredUserDto,
   LoggedInUserDto,
+  doesPasswordMatch,
+  hashPassword,
 } from '@app/common';
 import { AuthServiceInterface } from './interfaces/auth.service.interface';
 
@@ -45,13 +46,6 @@ export class AuthService implements AuthServiceInterface {
     });
   }
 
-  async hashPassword(password: string): Promise<[salt: string, hash: string]> {
-    const salt = await bcrypt.genSalt();
-    const hash = await bcrypt.hash(password, salt);
-
-    return [salt, hash];
-  }
-
   async register(
     newUser: Readonly<RegisterUserDTO>,
   ): Promise<RegisteredUserDto> {
@@ -63,7 +57,7 @@ export class AuthService implements AuthServiceInterface {
       throw new ConflictException('An account with that email already exists');
     }
 
-    const [salt, hash] = await this.hashPassword(password);
+    const [salt, hash] = await hashPassword(password);
 
     const savedUser = await this.usersRepository.save({
       username: generateUsernameFromEmail(email),
@@ -78,13 +72,6 @@ export class AuthService implements AuthServiceInterface {
     return savedUser;
   }
 
-  async doesPasswordMatch(
-    password: string,
-    hashedPassword: string,
-  ): Promise<boolean> {
-    return bcrypt.compare(password, hashedPassword);
-  }
-
   async validateUser(username: string, password: string): Promise<UserEntity> {
     let user = await this.getByUsername(username);
     let userExists = !!user;
@@ -96,10 +83,7 @@ export class AuthService implements AuthServiceInterface {
 
     if (!userExists) return null;
 
-    const passwordMatches = await this.doesPasswordMatch(
-      password,
-      user.password,
-    );
+    const passwordMatches = await doesPasswordMatch(password, user.password);
 
     if (!passwordMatches) return null;
 

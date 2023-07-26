@@ -30,24 +30,6 @@ export class UsersController implements CommonControllerInterface {
 
   @UseGuards(AuthGuard)
   @UseInterceptors(UserInterceptor)
-  @Post()
-  async create(@Req() req: UserRequest, @Body() body: CreateUserDTO) {
-    if (!req?.user) {
-      throw new BadRequestException();
-    }
-
-    return this.usersService.send(
-      {
-        cmd: 'users.create',
-      },
-      {
-        body,
-      },
-    );
-  }
-
-  @UseGuards(AuthGuard)
-  @UseInterceptors(UserInterceptor)
   @Get()
   async getAll(@Req() req: UserRequest) {
     if (!req?.user) {
@@ -77,6 +59,22 @@ export class UsersController implements CommonControllerInterface {
       {
         id,
       },
+    );
+  }
+
+  @UseGuards(AuthGuard)
+  @UseInterceptors(UserInterceptor)
+  @Post()
+  async create(@Req() req: UserRequest, @Body() body: CreateUserDTO) {
+    if (!req?.user) {
+      throw new BadRequestException();
+    }
+
+    return this.usersService.send(
+      {
+        cmd: 'users.create',
+      },
+      body,
     );
   }
 

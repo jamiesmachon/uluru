@@ -1,15 +1,11 @@
-import { OrderEntity } from '@app/common';
+import { OrderEntity, UpdateOrderDTO } from '@app/common';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import { CreateOrderDTO } from '../dtos/create-order.dto';
-import { UpdateOrderDTO } from '../dtos/update-order.dto';
+import { CreateOrderDTO } from '@app/common';
 
 export interface OrdersServiceInterface {
-  create(user: CreateOrderDTO): Promise<OrderEntity>;
-  getAll(): Promise<OrderEntity[]>;
+  getAll(where: object): Promise<OrderEntity[]>;
   getBy(where: object): Promise<OrderEntity>;
-  update(
-    id: number,
-    order: UpdateOrderDTO,
-  ): Promise<OrderEntity | UpdateResult>;
+  create(order: CreateOrderDTO): Promise<OrderEntity>;
+  update(id: number, body: UpdateOrderDTO): Promise<OrderEntity | UpdateResult>;
   delete(id: number): Promise<DeleteResult>;
 }

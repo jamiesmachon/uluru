@@ -1,15 +1,10 @@
-import { AssetEntity } from '@app/common';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import { CreateAssetDTO } from '../dtos/create-asset.dto';
-import { UpdateAssetDTO } from '../dtos/update-asset.dto';
+import { AssetEntity, CreateAssetDTO, UpdateAssetDTO } from '@app/common';
 
 export interface AssetsServiceInterface {
-  create(user: CreateAssetDTO): Promise<AssetEntity>;
-  getAll(): Promise<AssetEntity[]>;
+  getAll(where: object): Promise<AssetEntity[]>;
   getBy(where: object): Promise<AssetEntity>;
-  update(
-    id: number,
-    asset: UpdateAssetDTO,
-  ): Promise<AssetEntity | UpdateResult>;
+  create(asset: CreateAssetDTO): Promise<AssetEntity>;
+  update(id: number, body: UpdateAssetDTO): Promise<AssetEntity | UpdateResult>;
   delete(id: number): Promise<DeleteResult>;
 }

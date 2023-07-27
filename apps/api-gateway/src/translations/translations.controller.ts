@@ -19,7 +19,7 @@ import {
   UserInterceptor,
   UserRequest,
   CreateTranslationDTO,
-  GetTranslationsDTO,
+  ReadTranslationDTO,
   UpdateTranslationDTO,
 } from '@app/common';
 
@@ -33,7 +33,7 @@ export class TranslationsController implements CommonControllerInterface {
   @UseGuards(AuthGuard)
   @UseInterceptors(UserInterceptor)
   @Get()
-  async getAll(@Req() req: UserRequest, @Body() body: GetTranslationsDTO) {
+  async getAll(@Req() req: UserRequest, @Body() where: object) {
     if (!req?.user) {
       throw new BadRequestException();
     }
@@ -42,7 +42,7 @@ export class TranslationsController implements CommonControllerInterface {
       {
         cmd: 'translations.get-all',
       },
-      body,
+      where,
     );
   }
 
@@ -76,9 +76,7 @@ export class TranslationsController implements CommonControllerInterface {
       {
         cmd: 'translations.create',
       },
-      {
-        body,
-      },
+      body,
     );
   }
 
@@ -100,7 +98,7 @@ export class TranslationsController implements CommonControllerInterface {
       },
       {
         id,
-        body,
+        ...body,
       },
     );
   }

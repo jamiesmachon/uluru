@@ -3,7 +3,7 @@ import {
   UserJwt,
   RegisterUserDTO,
   LoginUserDTO,
-  RegisteredUserDto,
+  RegisteredUserDTO,
   LoggedInUserDto,
 } from '@app/common';
 import { Response } from 'express';
@@ -12,7 +12,7 @@ export interface AuthServiceInterface {
   getUserById(id: number): Promise<UserEntity>;
   getByUsername(username: string): Promise<UserEntity>;
   getByEmail(email: string): Promise<UserEntity>;
-  register(newUser: Readonly<RegisterUserDTO>): Promise<RegisteredUserDto>;
+  register(newUser: Readonly<RegisterUserDTO>): Promise<RegisteredUserDTO>;
   validateUser(username: string, password: string): Promise<UserEntity>;
   login(
     existingUser: Readonly<LoginUserDTO>,

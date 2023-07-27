@@ -6,6 +6,7 @@ import {
   CreateUserDTO,
   generateUsernameFromEmail,
   hashPassword,
+  UpdateUserDTO,
 } from '@app/common';
 import { UsersServiceInterface } from './interfaces/users.service.interface';
 
@@ -16,9 +17,20 @@ export class UsersService implements UsersServiceInterface {
     private readonly usersRepository: UsersRepositoryInterface,
   ) {}
 
-  async create(newUser: CreateUserDTO): Promise<UserEntity> {
-    console.log('newUser', newUser);
+  async getAll(where: object): Promise<UserEntity[]> {
+    return await this.usersRepository.findAll({
+      where: { ...where },
+    });
+  }
 
+  async getBy(where: object): Promise<UserEntity> {
+    return this.usersRepository.findByCondition({
+      where: { ...where },
+      // select: ['id', 'username', 'email', 'password'],
+    });
+  }
+
+  async create(newUser: CreateUserDTO): Promise<UserEntity> {
     const { email, password } = newUser;
 
     const existingUser = await this.getBy({ email: email });
@@ -39,20 +51,9 @@ export class UsersService implements UsersServiceInterface {
     return savedUser;
   }
 
-  async getAll(): Promise<UserEntity[]> {
-    return await this.usersRepository.findAll();
-  }
-
-  async getBy(where: object): Promise<UserEntity> {
-    return this.usersRepository.findByCondition({
-      where: { ...where },
-      // select: ['id', 'username', 'email', 'password'],
-    });
-  }
-
   async update(
     id: number,
-    body: Omit<CreateUserDTO, 'id'>,
+    body: UpdateUserDTO,
   ): Promise<UserEntity | UpdateResult> {
     const user = await this.getBy({ id: id }).then((res) => res);
     if (user) return await this.usersRepository.update(id, body);

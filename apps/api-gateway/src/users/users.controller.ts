@@ -31,7 +31,7 @@ export class UsersController implements CommonControllerInterface {
   @UseGuards(AuthGuard)
   @UseInterceptors(UserInterceptor)
   @Get()
-  async getAll(@Req() req: UserRequest) {
+  async getAll(@Req() req: UserRequest, @Body() where: object) {
     if (!req?.user) {
       throw new BadRequestException();
     }
@@ -40,7 +40,7 @@ export class UsersController implements CommonControllerInterface {
       {
         cmd: 'users.get-all',
       },
-      {},
+      where,
     );
   }
 
@@ -96,7 +96,7 @@ export class UsersController implements CommonControllerInterface {
       },
       {
         id,
-        body,
+        ...body,
       },
     );
   }

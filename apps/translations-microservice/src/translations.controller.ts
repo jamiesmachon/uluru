@@ -8,7 +8,6 @@ import {
 import {
   RabbitMQService,
   CreateTranslationDTO,
-  GetTranslationsDTO,
   UpdateTranslationDTO,
 } from '@app/common';
 import { TranslationsService } from './translations.service';
@@ -22,24 +21,11 @@ export class TranslationsController {
     private readonly translationsService: TranslationsService,
   ) {}
 
-  @MessagePattern({ cmd: 'translations.create' })
-  async createTranslation(
-    @Ctx() context: RmqContext,
-    @Payload() newTranslation: CreateTranslationDTO,
-  ) {
-    this.rmqService.ack(context);
-
-    return this.translationsService.create(newTranslation);
-  }
-
   @MessagePattern({ cmd: 'translations.get-all' })
-  async getTranslations(
-    @Ctx() context: RmqContext,
-    @Payload() body: GetTranslationsDTO,
-  ) {
+  async getTranslations(@Ctx() context: RmqContext, @Payload() where: object) {
     this.rmqService.ack(context);
 
-    return this.translationsService.getAll(body);
+    return this.translationsService.getAll(where);
   }
 
   @MessagePattern({ cmd: 'translations.get' })
@@ -50,6 +36,16 @@ export class TranslationsController {
     this.rmqService.ack(context);
 
     return this.translationsService.getBy({ id: translation.id });
+  }
+
+  @MessagePattern({ cmd: 'translations.create' })
+  async createTranslation(
+    @Ctx() context: RmqContext,
+    @Payload() newTranslation: CreateTranslationDTO,
+  ) {
+    this.rmqService.ack(context);
+
+    return this.translationsService.create(newTranslation);
   }
 
   @MessagePattern({ cmd: 'translations.update' })

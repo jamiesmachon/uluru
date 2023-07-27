@@ -2,17 +2,16 @@ import { DeleteResult, UpdateResult } from 'typeorm';
 import {
   TranslationEntity,
   CreateTranslationDTO,
-  GetTranslationsDTO,
   UpdateTranslationDTO,
 } from '@app/common';
 
 export interface TranslationsServiceInterface {
-  create(user: CreateTranslationDTO): Promise<TranslationEntity>;
-  getAll(where: GetTranslationsDTO): Promise<TranslationEntity[]>;
+  getAll(where: object): Promise<TranslationEntity[]>;
   getBy(where: object): Promise<TranslationEntity>;
+  create(translation: CreateTranslationDTO): Promise<TranslationEntity>;
   update(
     id: number,
-    user: UpdateTranslationDTO,
+    body: UpdateTranslationDTO,
   ): Promise<TranslationEntity | UpdateResult>;
   delete(id: number): Promise<DeleteResult>;
 }

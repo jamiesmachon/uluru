@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BaseAbstractRepository } from './base/base.abstract.repository';
-import { TranslationEntity } from '../entities/translation.entity';
+import { TranslationEntity } from '../entities/translations/translation.entity';
 import { TranslationsRepositoryInterface } from '../interfaces/repositories/translations.repository.interface';
 
 @Injectable()

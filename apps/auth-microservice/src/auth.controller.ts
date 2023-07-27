@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Inject } from '@nestjs/common';
+import { Controller, Inject } from '@nestjs/common';
 import {
   Ctx,
   MessagePattern,

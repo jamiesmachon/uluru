@@ -1,9 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import { OrderEntity, OrdersRepositoryInterface } from '@app/common';
+import {
+  CreateOrderDTO,
+  OrderEntity,
+  OrdersRepositoryInterface,
+  UpdateOrderDTO,
+} from '@app/common';
 import { OrdersServiceInterface } from './interfaces/orders.service.interface';
-import { CreateOrderDTO } from './dtos/create-order.dto';
-import { UpdateOrderDTO } from './dtos/update-order.dto';
 
 @Injectable()
 export class OrdersService implements OrdersServiceInterface {
@@ -12,12 +15,10 @@ export class OrdersService implements OrdersServiceInterface {
     private readonly ordersRepository: OrdersRepositoryInterface,
   ) {}
 
-  async create(data: CreateOrderDTO): Promise<OrderEntity> {
-    return await this.ordersRepository.save(data);
-  }
-
-  async getAll(): Promise<OrderEntity[]> {
-    return await this.ordersRepository.findAll();
+  async getAll(where: object): Promise<OrderEntity[]> {
+    return await this.ordersRepository.findAll({
+      where: { ...where },
+    });
   }
 
   async getBy(where: object): Promise<OrderEntity> {
@@ -27,12 +28,16 @@ export class OrdersService implements OrdersServiceInterface {
     });
   }
 
+  async create(data: CreateOrderDTO): Promise<OrderEntity> {
+    return await this.ordersRepository.save(data);
+  }
+
   async update(
     id: number,
-    data: UpdateOrderDTO,
+    body: UpdateOrderDTO,
   ): Promise<OrderEntity | UpdateResult> {
-    const user = await this.getBy({ id: id }).then((res) => res);
-    if (user) return await this.ordersRepository.update(id, data);
+    const order = await this.getBy({ id: id }).then((res) => res);
+    if (order) return await this.ordersRepository.update(id, body);
     return;
   }
 

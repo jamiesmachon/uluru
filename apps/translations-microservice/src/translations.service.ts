@@ -4,7 +4,6 @@ import {
   TranslationEntity,
   TranslationsRepositoryInterface,
   CreateTranslationDTO,
-  GetTranslationsDTO,
   UpdateTranslationDTO,
 } from '@app/common';
 import { TranslationsServiceInterface } from './interfaces/translations.service.interface';
@@ -16,12 +15,10 @@ export class TranslationsService implements TranslationsServiceInterface {
     private readonly translationsRepository: TranslationsRepositoryInterface,
   ) {}
 
-  async create(data: CreateTranslationDTO): Promise<TranslationEntity> {
-    return await this.translationsRepository.save(data);
-  }
-
-  async getAll(where: GetTranslationsDTO): Promise<TranslationEntity[]> {
-    return await this.translationsRepository.findAll({ where });
+  async getAll(where: object): Promise<TranslationEntity[]> {
+    return await this.translationsRepository.findAll({
+      where: { ...where },
+    });
   }
 
   async getBy(where: object): Promise<TranslationEntity> {
@@ -30,12 +27,16 @@ export class TranslationsService implements TranslationsServiceInterface {
     });
   }
 
+  async create(data: CreateTranslationDTO): Promise<TranslationEntity> {
+    return await this.translationsRepository.save(data);
+  }
+
   async update(
     id: number,
-    data: UpdateTranslationDTO,
+    body: UpdateTranslationDTO,
   ): Promise<TranslationEntity | UpdateResult> {
-    const user = await this.getBy({ id: id }).then((res) => res);
-    if (user) return await this.translationsRepository.update(id, data);
+    const translation = await this.getBy({ id: id }).then((res) => res);
+    if (translation) return await this.translationsRepository.update(id, body);
     return;
   }
 

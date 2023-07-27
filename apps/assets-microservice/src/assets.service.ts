@@ -1,6 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import { AssetEntity, AssetsRepositoryInterface } from '@app/common';
+import {
+  AssetEntity,
+  AssetsRepositoryInterface,
+  CreateAssetDTO,
+  UpdateAssetDTO,
+} from '@app/common';
 import { AssetsServiceInterface } from './interfaces/assets.service.interface';
 
 @Injectable()
@@ -10,12 +15,10 @@ export class AssetsService implements AssetsServiceInterface {
     private readonly assetsRepository: AssetsRepositoryInterface,
   ) {}
 
-  async create(data: any): Promise<AssetEntity> {
-    return await this.assetsRepository.save(data);
-  }
-
-  async getAll(): Promise<AssetEntity[]> {
-    return await this.assetsRepository.findAll();
+  async getAll(where: object): Promise<AssetEntity[]> {
+    return await this.assetsRepository.findAll({
+      where: { ...where },
+    });
   }
 
   async getBy(where: object): Promise<AssetEntity> {
@@ -24,7 +27,14 @@ export class AssetsService implements AssetsServiceInterface {
     });
   }
 
-  async update(id: number, data: any): Promise<AssetEntity | UpdateResult> {
+  async create(data: CreateAssetDTO): Promise<AssetEntity> {
+    return await this.assetsRepository.save(data);
+  }
+
+  async update(
+    id: number,
+    data: UpdateAssetDTO,
+  ): Promise<AssetEntity | UpdateResult> {
     const user = await this.getBy({ id: id }).then((res) => res);
     if (user) return await this.assetsRepository.update(id, data);
     return;

@@ -5,10 +5,8 @@ import {
   Payload,
   RmqContext,
 } from '@nestjs/microservices';
-import { RabbitMQService } from '@app/common';
+import { CreateOrderDTO, RabbitMQService, UpdateOrderDTO } from '@app/common';
 import { OrdersService } from './orders.service';
-import { CreateOrderDTO } from './dtos/create-order.dto';
-import { UpdateOrderDTO } from './dtos/update-order.dto';
 
 @Controller()
 export class OrdersController {
@@ -19,6 +17,20 @@ export class OrdersController {
     private readonly ordersService: OrdersService,
   ) {}
 
+  @MessagePattern({ cmd: 'orders.get-all' })
+  async getOrders(@Ctx() context: RmqContext, @Payload() where: object) {
+    this.rmqService.ack(context);
+
+    return this.ordersService.getAll(where);
+  }
+
+  @MessagePattern({ cmd: 'orders.get' })
+  async getOrder(@Ctx() context: RmqContext, @Payload() order: { id: number }) {
+    this.rmqService.ack(context);
+
+    return this.ordersService.getBy({ id: order.id });
+  }
+
   @MessagePattern({ cmd: 'orders.create' })
   async createOrder(
     @Ctx() context: RmqContext,
@@ -27,20 +39,6 @@ export class OrdersController {
     this.rmqService.ack(context);
 
     return this.ordersService.create(newOrder);
-  }
-
-  @MessagePattern({ cmd: 'orders.get-all' })
-  async getOrders(@Ctx() context: RmqContext) {
-    this.rmqService.ack(context);
-
-    return this.ordersService.getAll();
-  }
-
-  @MessagePattern({ cmd: 'orders.get' })
-  async getOrder(@Ctx() context: RmqContext, @Payload() order: { id: number }) {
-    this.rmqService.ack(context);
-
-    return this.ordersService.getBy({ id: order.id });
   }
 
   @MessagePattern({ cmd: 'orders.update' })

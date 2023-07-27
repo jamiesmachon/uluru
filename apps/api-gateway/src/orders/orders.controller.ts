@@ -31,7 +31,7 @@ export class OrdersController implements CommonControllerInterface {
   @UseGuards(AuthGuard)
   @UseInterceptors(UserInterceptor)
   @Get()
-  async getAll(@Req() req: UserRequest) {
+  async getAll(@Req() req: UserRequest, @Body() where: object) {
     if (!req?.user) {
       throw new BadRequestException();
     }
@@ -40,7 +40,7 @@ export class OrdersController implements CommonControllerInterface {
       {
         cmd: 'orders.get-all',
       },
-      {},
+      where,
     );
   }
 
@@ -74,9 +74,7 @@ export class OrdersController implements CommonControllerInterface {
       {
         cmd: 'orders.create',
       },
-      {
-        body,
-      },
+      body,
     );
   }
 
@@ -98,7 +96,7 @@ export class OrdersController implements CommonControllerInterface {
       },
       {
         id,
-        body,
+        ...body,
       },
     );
   }

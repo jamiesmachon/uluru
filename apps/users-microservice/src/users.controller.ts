@@ -17,6 +17,20 @@ export class UsersController {
     private readonly usersService: UsersService,
   ) {}
 
+  @MessagePattern({ cmd: 'users.get-all' })
+  async getUsers(@Ctx() context: RmqContext, @Payload() where: object) {
+    this.rmqService.ack(context);
+
+    return this.usersService.getAll(where);
+  }
+
+  @MessagePattern({ cmd: 'users.get' })
+  async getUser(@Ctx() context: RmqContext, @Payload() user: { id: number }) {
+    this.rmqService.ack(context);
+
+    return this.usersService.getBy({ id: user.id });
+  }
+
   @MessagePattern({ cmd: 'users.create' })
   async createUser(
     @Ctx() context: RmqContext,
@@ -27,20 +41,6 @@ export class UsersController {
     return this.usersService.create(newUser);
   }
 
-  @MessagePattern({ cmd: 'users.get-all' })
-  async getUsers(@Ctx() context: RmqContext) {
-    this.rmqService.ack(context);
-
-    return this.usersService.getAll();
-  }
-
-  @MessagePattern({ cmd: 'users.get' })
-  async getUser(@Ctx() context: RmqContext, @Payload() user: { id: number }) {
-    this.rmqService.ack(context);
-
-    return this.usersService.getBy({ id: user.id });
-  }
-
   @MessagePattern({ cmd: 'users.update' })
   async updateUser(
     @Ctx() context: RmqContext,
@@ -48,7 +48,7 @@ export class UsersController {
   ) {
     this.rmqService.ack(context);
 
-    return this.usersService.update(updateUser.id, updateUser.body);
+    return this.usersService.update(updateUser.id, updateUser);
   }
 
   @MessagePattern({ cmd: 'users.delete' })

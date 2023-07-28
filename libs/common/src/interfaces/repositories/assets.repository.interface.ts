@@ -1,5 +1,5 @@
-import { BaseInterfaceRepository } from '../../repositories/base/base.interface.repository';
-import { AssetEntity } from '../../entities/assets/asset.entity';
+import { AssetEntity } from '@app/common/entities';
+import { BaseInterfaceRepository } from '@app/common/repositories';
 
 export interface AssetsRepositoryInterface
   extends BaseInterfaceRepository<AssetEntity> {}

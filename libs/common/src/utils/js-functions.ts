@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcrypt';
 
-export function generateUsernameFromEmail(str: string): string {
-  return str.split('@')[0].toLowerCase().replace(/\./g, '');
+export function generateUsernameFromEmail(email: string): string {
+  return email.split('@')[0].toLowerCase().replace(/\./g, '');
 }
 
 export async function hashPassword(
@@ -18,4 +18,11 @@ export async function doesPasswordMatch(
   hashedPassword: string,
 ): Promise<boolean> {
   return bcrypt.compare(password, hashedPassword);
+}
+
+export function createValidationCode(): string {
+  const salt = bcrypt.genSaltSync(10);
+  const code = bcrypt.hashSync(Date.now().toString(), salt);
+
+  return code;
 }

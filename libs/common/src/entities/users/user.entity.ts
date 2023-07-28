@@ -6,12 +6,9 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   OneToMany,
-  OneToOne,
-  JoinColumn,
 } from 'typeorm';
 import { UserMetaEntity } from './usermeta.entity';
 import { OrderEntity } from '../orders/order.entity';
-import { AssetEntity } from '../assets/asset.entity';
 
 export enum UserRoles {
   GLOBALSUPERADMIN = 'global-super-admin',
@@ -52,7 +49,7 @@ export class UserEntity {
     enum: UserRoles,
     default: UserRoles.USER,
   })
-  role: UserStatus;
+  role: UserRoles;
 
   @Column({ default: null })
   capabilities: string;
@@ -78,13 +75,6 @@ export class UserEntity {
 
   @DeleteDateColumn()
   deleted: string;
-
-  // link the product to an asset
-  @OneToOne(() => AssetEntity, (asset) => asset.user, {
-    eager: true,
-  })
-  @JoinColumn({ name: 'asset_id' })
-  asset: AssetEntity;
 
   // link the user to the meta data
   @OneToMany(() => UserMetaEntity, (meta) => meta.user)

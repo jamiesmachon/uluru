@@ -7,9 +7,11 @@ import {
   AssetEntity,
   AssetMetaEntity,
   AssetsRepository,
+  HttpExceptionFilter,
 } from '@app/common';
 import { AssetsController } from './assets.controller';
 import { AssetsService } from './assets.service';
+import { APP_FILTER } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -19,6 +21,10 @@ import { AssetsService } from './assets.service';
   ],
   controllers: [AssetsController],
   providers: [
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
     {
       provide: 'RabbitMQServiceInterface',
       useClass: RabbitMQService,

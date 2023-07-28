@@ -2,25 +2,25 @@ import { UserRoles, UserStatus } from '@app/common/entities/users/user.entity';
 import { IsNotEmpty, IsEmail } from 'class-validator';
 
 export class CreateUserDTO {
-  username: string;
+  @IsEmail({}, { message: 'Enter a valid email address' })
+  email: string;
 
   @IsNotEmpty({ message: 'Password field cannot be empty' })
   password: string;
 
-  salt: string;
+  salt?: string;
 
-  @IsEmail({}, { message: 'Enter a valid email address' })
-  email: string;
+  username?: string;
 
-  language?: string;
+  language: string;
 
-  role?: UserRoles;
+  role: UserRoles;
 
-  capabilities?: string;
+  capabilities: string;
 
   validationCode?: string;
 
-  distributor?: string;
+  distributor: string;
 
-  status?: UserStatus;
+  status: UserStatus;
 }

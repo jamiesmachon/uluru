@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {
+  HttpExceptionFilter,
   MysqlModule,
   RabbitMQModule,
   RabbitMQService,
@@ -9,6 +10,7 @@ import {
 } from '@app/common';
 import { TranslationsController } from './translations.controller';
 import { TranslationsService } from './translations.service';
+import { APP_FILTER } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -18,6 +20,10 @@ import { TranslationsService } from './translations.service';
   ],
   controllers: [TranslationsController],
   providers: [
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
     {
       provide: 'RabbitMQServiceInterface',
       useClass: RabbitMQService,

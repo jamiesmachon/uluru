@@ -7,6 +7,6 @@ export class CronService {
 
   @Cron(CronExpression.EVERY_HOUR, { name: 'handleCron' })
   handleCron() {
-    this.logger.log('I am a CronJob called every 10 seconds');
+    this.logger.log('I am a CronJob called every Hour');
   }
 }

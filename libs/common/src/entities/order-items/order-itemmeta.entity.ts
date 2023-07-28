@@ -8,7 +8,7 @@ import {
 import { OrderItemEntity } from './order-item.entity';
 
 @Entity({
-  name: 'order-itemmeta',
+  name: 'order_itemmeta',
 })
 export class OrderItemMetaEntity {
   @PrimaryGeneratedColumn({

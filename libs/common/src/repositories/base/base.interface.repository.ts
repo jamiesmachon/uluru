@@ -22,4 +22,5 @@ export interface BaseInterfaceRepository<T> {
   ): Promise<T | UpdateResult>;
   delete(id: number): Promise<DeleteResult>;
   preload(entityLike: DeepPartial<T>): Promise<T>;
+  query(sql: string, parameters?: any[]): Promise<any>;
 }

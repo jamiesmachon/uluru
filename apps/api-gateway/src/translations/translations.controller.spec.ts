@@ -3,7 +3,7 @@ import { TranslationsController } from './translations.controller';
 import { ClientProxy } from '@nestjs/microservices';
 import {
   CreateTranslationDTO,
-  GetTranslationsDTO,
+  ReadTranslationDTO,
   UpdateTranslationDTO,
   UserRequest,
 } from '@app/common';
@@ -58,7 +58,7 @@ describe('TranslationsController', () => {
 
   describe('getAll', () => {
     it('should call translationsService.send with the correct arguments', async () => {
-      const getTranslationDTO: GetTranslationsDTO = {
+      const getTranslationDTO: ReadTranslationDTO = {
         set: 'test',
         language: 'english',
       };

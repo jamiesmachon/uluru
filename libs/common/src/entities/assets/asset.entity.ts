@@ -10,7 +10,6 @@ import {
 } from 'typeorm';
 import { AssetMetaEntity } from './assetmeta.entity';
 import { ProductEntity } from '../products/product.entity';
-import { UserEntity } from '../users/user.entity';
 
 @Entity({
   name: 'assets',
@@ -51,8 +50,4 @@ export class AssetEntity {
   // link the asset to a product
   @OneToOne(() => ProductEntity, (product) => product.asset)
   product: ProductEntity;
-
-  // link the asset to a user
-  @OneToOne(() => UserEntity, (user) => user.asset)
-  user: UserEntity;
 }

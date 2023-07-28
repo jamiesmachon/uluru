@@ -72,4 +72,8 @@ export abstract class BaseAbstractRepository<T extends HasId>
   public async preload(entityLike: DeepPartial<T>): Promise<T> {
     return await this.entity.preload(entityLike);
   }
+
+  public async query(sql: string, parameters?: any[]): Promise<T> {
+    return await this.entity.query(sql, parameters);
+  }
 }

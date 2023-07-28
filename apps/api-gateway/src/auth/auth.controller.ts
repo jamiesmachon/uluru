@@ -1,6 +1,6 @@
 import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { LoginUserDTO, RegisterUserDTO } from '@app/common';
+import { LoginUserDTO, RegisterUserDTO, ValidateUserDTO } from '@app/common';
 
 @Controller('auth')
 export class AuthController {
@@ -13,6 +13,16 @@ export class AuthController {
     return this.authService.send(
       {
         cmd: 'auth.register',
+      },
+      body,
+    );
+  }
+
+  @Post('validate')
+  async validate(@Body() body: ValidateUserDTO) {
+    return this.authService.send(
+      {
+        cmd: 'auth.validate',
       },
       body,
     );

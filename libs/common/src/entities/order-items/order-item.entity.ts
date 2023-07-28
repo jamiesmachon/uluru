@@ -37,11 +37,12 @@ export class OrderItemEntity {
   })
   type: OrderItemTypes;
 
+  // link the order item to an order
+  @ManyToOne(() => OrderEntity, (order) => order.items)
+  @JoinColumn({ name: 'order_id' })
+  order: OrderEntity;
+
   // link the order item to the meta data
   @OneToMany(() => OrderItemMetaEntity, (meta) => meta.orderItem)
   metaData: OrderItemMetaEntity[];
-
-  // link the order item to an order
-  @ManyToOne(() => OrderEntity, (order) => order.items)
-  order: OrderEntity;
 }

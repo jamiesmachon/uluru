@@ -1,5 +1,5 @@
-import { RegisteredUserDto } from './registered-user.dto';
+import { RegisteredUserDTO } from './registered-user.dto';
 
-export class LoggedInUserDto extends RegisteredUserDTO {
+export class LoggedInUserDTO extends RegisteredUserDTO {
   accessToken: string;
 }

@@ -7,9 +7,11 @@ import {
   OrderEntity,
   OrderMetaEntity,
   OrdersRepository,
+  HttpExceptionFilter,
 } from '@app/common';
 import { OrdersController } from './orders.controller';
 import { OrdersService } from './orders.service';
+import { APP_FILTER } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -19,6 +21,10 @@ import { OrdersService } from './orders.service';
   ],
   controllers: [OrdersController],
   providers: [
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
     {
       provide: 'RabbitMQServiceInterface',
       useClass: RabbitMQService,

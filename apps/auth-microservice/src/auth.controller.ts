@@ -5,7 +5,12 @@ import {
   Payload,
   RmqContext,
 } from '@nestjs/microservices';
-import { RabbitMQService, RegisterUserDTO, LoginUserDTO } from '@app/common';
+import {
+  RabbitMQService,
+  RegisterUserDTO,
+  LoginUserDTO,
+  ValidateUserDTO,
+} from '@app/common';
 import { AuthService } from './auth.service';
 
 @Controller()
@@ -26,6 +31,17 @@ export class AuthController {
     this.rmqService.ack(context);
 
     return this.authService.register(newUser);
+  }
+
+  // watch for validate request messages
+  @MessagePattern({ cmd: 'auth.validate' })
+  async validate(
+    @Ctx() context: RmqContext,
+    @Payload() validateUser: ValidateUserDTO,
+  ) {
+    this.rmqService.ack(context);
+
+    return this.authService.validate(validateUser);
   }
 
   // watch for login request messages

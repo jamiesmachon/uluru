@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { RmqContext, RmqOptions, Transport } from '@nestjs/microservices';
-import { RabbitMQServiceInterface } from '../interfaces/rabbitmq.service.interface';
+import { RabbitMQServiceInterface } from '../interfaces';
 
 @Injectable()
 export class RabbitMQService implements RabbitMQServiceInterface {

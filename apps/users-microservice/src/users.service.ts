@@ -7,6 +7,7 @@ import {
   generateUsernameFromEmail,
   hashPassword,
   UpdateUserDTO,
+  createValidationCode,
 } from '@app/common';
 import { UsersServiceInterface } from './interfaces/users.service.interface';
 
@@ -33,19 +34,24 @@ export class UsersService implements UsersServiceInterface {
   async create(newUser: CreateUserDTO): Promise<UserEntity> {
     const { email, password } = newUser;
 
+    // check if a user with the email address already exists
     const existingUser = await this.getBy({ email: email });
-
     if (existingUser) {
       throw new ConflictException('An account with that email already exists');
     }
 
+    // create a validationCode token
+    const validationCode = createValidationCode();
+
+    // hash the password
     const [salt, hash] = await hashPassword(password);
 
     const savedUser = await this.usersRepository.save({
       ...newUser,
       username: generateUsernameFromEmail(email),
-      salt,
       password: hash,
+      salt: salt,
+      validationCode: validationCode,
     });
 
     return savedUser;

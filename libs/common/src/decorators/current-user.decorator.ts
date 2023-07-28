@@ -1,5 +1,5 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { LoginUserDTO } from '../dto/auth/login-user.dto';
+import { LoginUserDTO } from '../dto';
 
 export const getCurrentUserByContext = (
   context: ExecutionContext,

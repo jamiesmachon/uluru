@@ -1,5 +1,5 @@
-import { BaseInterfaceRepository } from '../../repositories/base/base.interface.repository';
-import { OrderEntity } from '../../entities/order.entity';
+import { OrderEntity } from '@app/common/entities';
+import { BaseInterfaceRepository } from '@app/common/repositories';
 
 export interface OrdersRepositoryInterface
   extends BaseInterfaceRepository<OrderEntity> {}

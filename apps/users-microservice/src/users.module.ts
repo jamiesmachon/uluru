@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {
+  HttpExceptionFilter,
   MysqlModule,
   RabbitMQModule,
   RabbitMQService,
@@ -10,6 +11,7 @@ import {
 } from '@app/common';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
+import { APP_FILTER } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -19,6 +21,10 @@ import { UsersService } from './users.service';
   ],
   controllers: [UsersController],
   providers: [
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
     {
       provide: 'RabbitMQServiceInterface',
       useClass: RabbitMQService,

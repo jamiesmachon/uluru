@@ -10,12 +10,14 @@ import {
   UserEntity,
   UsersRepository,
   UserMetaEntity,
+  HttpExceptionFilter,
 } from '@app/common';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { LocalStrategy } from './strategy/local.strategy';
 import { JwtStrategy } from './strategy/jwt-strategy';
+import { APP_FILTER } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -45,6 +47,10 @@ import { JwtStrategy } from './strategy/jwt-strategy';
     JwtAuthGuard,
     LocalStrategy,
     JwtStrategy,
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
     {
       provide: 'RabbitMQServiceInterface',
       useClass: RabbitMQService,

@@ -1,9 +1,11 @@
-//decorators
+// decorators
 export * from './decorators/index';
 // dtos
 export * from './dto/index';
 // entities
 export * from './entities/index';
+// filters
+export * from './filters/index';
 // guards
 export * from './guards/index';
 // interceptors

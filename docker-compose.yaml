@@ -20,6 +20,8 @@ services:
     restart: always
     env_file:
       - .env
+    depends_on:
+      - rabbitmq
     ports:
       - '3306:3306'
     environment:
@@ -37,6 +39,9 @@ services:
     command: /bin/sh -c "redis-server --requirepass $$REDIS_PASS"
     env_file:
       - .env
+    depends_on:
+      - rabbitmq
+      - mysql
     ports:
       - 6379:6379
     volumes:
@@ -71,6 +76,8 @@ services:
       - .env
     depends_on:
       - rabbitmq
+      - mysql
+      - redis
       - api-gateway
     volumes:
       - .:/usr/src/app # any change to base folder should be reflected
@@ -87,43 +94,31 @@ services:
       - .env
     depends_on:
       - rabbitmq
+      - mysql
+      - redis
       - api-gateway
     volumes:
       - .:/usr/src/app # any change to base folder should be reflected
       - /usr/src/app/node_modules
     command: npm run start:dev users-microservice # overrides CMD from dockerfile
 
-  # CronJob Service
-  cron-microservice:
-    container_name: uluru-cron-microservice
+  # Products CRUD Service
+  products-microservice:
+    container_name: uluru-products-microservice
     build:
       context: ./
-      dockerfile: ./apps/cron-microservice/Dockerfile
+      dockerfile: ./apps/products-microservice/Dockerfile
     env_file:
       - .env
     depends_on:
       - rabbitmq
+      - mysql
+      - redis
       - api-gateway
     volumes:
       - .:/usr/src/app # any change to base folder should be reflected
       - /usr/src/app/node_modules
-    command: npm run start:dev cron-microservice # overrides CMD from dockerfile
-
-  # Translations CRUD Service
-  translations-microservice:
-    container_name: uluru-translations-microservice
-    build:
-      context: ./
-      dockerfile: ./apps/translations-microservice/Dockerfile
-    env_file:
-      - .env
-    depends_on:
-      - rabbitmq
-      - api-gateway
-    volumes:
-      - .:/usr/src/app # any change to base folder should be reflected
-      - /usr/src/app/node_modules
-    command: npm run start:dev translations-microservice # overrides CMD from dockerfile
+    command: npm run start:dev products-microservice # overrides CMD from dockerfile
 
   # Orders CRUD Service
   orders-microservice:
@@ -135,11 +130,31 @@ services:
       - .env
     depends_on:
       - rabbitmq
+      - mysql
+      - redis
       - api-gateway
     volumes:
       - .:/usr/src/app # any change to base folder should be reflected
       - /usr/src/app/node_modules
     command: npm run start:dev orders-microservice # overrides CMD from dockerfile
+
+  # Translations CRUD Service
+  translations-microservice:
+    container_name: uluru-translations-microservice
+    build:
+      context: ./
+      dockerfile: ./apps/translations-microservice/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - rabbitmq
+      - mysql
+      - redis
+      - api-gateway
+    volumes:
+      - .:/usr/src/app # any change to base folder should be reflected
+      - /usr/src/app/node_modules
+    command: npm run start:dev translations-microservice # overrides CMD from dockerfile
 
   # Assets CRUD Service
   assets-microservice:
@@ -151,8 +166,28 @@ services:
       - .env
     depends_on:
       - rabbitmq
+      - mysql
+      - redis
       - api-gateway
     volumes:
       - .:/usr/src/app # any change to base folder should be reflected
       - /usr/src/app/node_modules
     command: npm run start:dev assets-microservice # overrides CMD from dockerfile
+
+  # CronJob Service
+  cron-microservice:
+    container_name: uluru-cron-microservice
+    build:
+      context: ./
+      dockerfile: ./apps/cron-microservice/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - rabbitmq
+      - mysql
+      - redis
+      - api-gateway
+    volumes:
+      - .:/usr/src/app # any change to base folder should be reflected
+      - /usr/src/app/node_modules
+    command: npm run start:dev cron-microservice # overrides CMD from dockerfile

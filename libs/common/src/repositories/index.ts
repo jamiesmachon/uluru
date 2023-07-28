@@ -4,5 +4,6 @@ export * from './base/base.interface.repository';
 // repositories
 export * from './translations.repository';
 export * from './users.repository';
+export * from './products.repository';
 export * from './orders.repository';
 export * from './assets.repository';

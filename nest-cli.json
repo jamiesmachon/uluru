@@ -45,22 +45,13 @@
         "tsConfigPath": "apps/users-microservice/tsconfig.app.json"
       }
     },
-    "cron-microservice": {
+    "products-microservice": {
       "type": "application",
-      "root": "apps/cron-microservice",
+      "root": "apps/products-microservice",
       "entryFile": "main",
-      "sourceRoot": "apps/cron-microservice/src",
+      "sourceRoot": "apps/products-microservice/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/cron-microservice/tsconfig.app.json"
-      }
-    },
-    "translations-microservice": {
-      "type": "application",
-      "root": "apps/translations-microservice",
-      "entryFile": "main",
-      "sourceRoot": "apps/translations-microservice/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/translations-microservice/tsconfig.app.json"
+        "tsConfigPath": "apps/products-microservice/tsconfig.app.json"
       }
     },
     "orders-microservice": {
@@ -72,6 +63,15 @@
         "tsConfigPath": "apps/orders-microservice/tsconfig.app.json"
       }
     },
+    "translations-microservice": {
+      "type": "application",
+      "root": "apps/translations-microservice",
+      "entryFile": "main",
+      "sourceRoot": "apps/translations-microservice/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/translations-microservice/tsconfig.app.json"
+      }
+    },
     "assets-microservice": {
       "type": "application",
       "root": "apps/assets-microservice",
@@ -79,6 +79,15 @@
       "sourceRoot": "apps/assets-microservice/src",
       "compilerOptions": {
         "tsConfigPath": "apps/assets-microservice/tsconfig.app.json"
+      }
+    },
+    "cron-microservice": {
+      "type": "application",
+      "root": "apps/cron-microservice",
+      "entryFile": "main",
+      "sourceRoot": "apps/cron-microservice/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/cron-microservice/tsconfig.app.json"
       }
     }
   }
